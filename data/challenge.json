@@ -1,0 +1,418 @@
+{
+ "start": "2026-09-25",
+ "days": [
+  {
+   "day": 1,
+   "topic": "Arrays & Hashing",
+   "core": [
+    "217. Contains Duplicate",
+    "242. Valid Anagram"
+   ],
+   "bonus": [
+    "1. Two Sum",
+    "49. Group Anagrams",
+    "347. Top K Frequent Elements"
+   ],
+   "project": "Playwright E2E Suite (1/2)"
+  },
+  {
+   "day": 2,
+   "topic": "Arrays & Hashing",
+   "core": [
+    "238. Product of Array Except Self",
+    "128. Longest Consecutive Sequence"
+   ],
+   "bonus": [
+    "36. Valid Sudoku",
+    "125. Valid Palindrome",
+    "167. Two Sum II"
+   ],
+   "project": "Playwright E2E Suite (2/2)"
+  },
+  {
+   "day": 3,
+   "topic": "Two Pointers",
+   "core": [
+    "15. 3Sum",
+    "11. Container With Most Water"
+   ],
+   "bonus": [
+    "42. Trapping Rain Water",
+    "121. Best Time to Buy and Sell Stock",
+    "3. Longest Substring Without Repeating Characters"
+   ],
+   "project": "API Test Framework (1/1)"
+  },
+  {
+   "day": 4,
+   "topic": "Sliding Window",
+   "core": [
+    "20. Valid Parentheses",
+    "424. Longest Repeating Character Replacement"
+   ],
+   "bonus": [
+    "567. Permutation in String",
+    "76. Minimum Window Substring",
+    "239. Sliding Window Maximum"
+   ],
+   "project": "Co-op Tracker MCP Server (1/2)"
+  },
+  {
+   "day": 5,
+   "topic": "Stack",
+   "core": [
+    "155. Min Stack",
+    "150. Evaluate Reverse Polish Notation"
+   ],
+   "bonus": [
+    "22. Generate Parentheses",
+    "739. Daily Temperatures",
+    "853. Car Fleet"
+   ],
+   "project": "Co-op Tracker MCP Server (2/2)"
+  },
+  {
+   "day": 6,
+   "topic": "Binary Search",
+   "core": [
+    "704. Binary Search",
+    "74. Search a 2D Matrix"
+   ],
+   "bonus": [
+    "875. Koko Eating Bananas",
+    "153. Find Minimum in Rotated Sorted Array",
+    "84. Largest Rectangle in Histogram"
+   ],
+   "project": "AI Bug Report Writer (1/2)"
+  },
+  {
+   "day": 7,
+   "topic": "Binary Search → Linked List",
+   "core": [
+    "206. Reverse Linked List",
+    "21. Merge Two Sorted Lists"
+   ],
+   "bonus": [
+    "33. Search in Rotated Sorted Array",
+    "981. Time Based Key-Value Store",
+    "4. Median of Two Sorted Arrays"
+   ],
+   "project": "AI Bug Report Writer (2/2)"
+  },
+  {
+   "day": 8,
+   "topic": "Linked List",
+   "core": [
+    "141. Linked List Cycle",
+    "19. Remove Nth Node From End of List"
+   ],
+   "bonus": [
+    "143. Reorder List",
+    "138. Copy List with Random Pointer",
+    "2. Add Two Numbers"
+   ],
+   "project": "n8n Issue Triage Bot (1/1)"
+  },
+  {
+   "day": 9,
+   "topic": "Linked List",
+   "core": [
+    "287. Find the Duplicate Number",
+    "146. LRU Cache"
+   ],
+   "bonus": [
+    "23. Merge k Sorted Lists",
+    "25. Reverse Nodes in k-Group",
+    "226. Invert Binary Tree"
+   ],
+   "project": "RAG Docs Assistant + Evals (1/2)"
+  },
+  {
+   "day": 10,
+   "topic": "Trees",
+   "core": [
+    "104. Maximum Depth of Binary Tree",
+    "543. Diameter of Binary Tree"
+   ],
+   "bonus": [
+    "110. Balanced Binary Tree",
+    "100. Same Tree",
+    "572. Subtree of Another Tree"
+   ],
+   "project": "RAG Docs Assistant + Evals (2/2)"
+  },
+  {
+   "day": 11,
+   "topic": "Trees",
+   "core": [
+    "235. Lowest Common Ancestor of a BST",
+    "102. Binary Tree Level Order Traversal"
+   ],
+   "bonus": [
+    "199. Binary Tree Right Side View",
+    "1448. Count Good Nodes in Binary Tree",
+    "98. Validate Binary Search Tree"
+   ],
+   "project": "AI Test Generator (1/2)"
+  },
+  {
+   "day": 12,
+   "topic": "Trees → Tries",
+   "core": [
+    "230. Kth Smallest Element in a BST",
+    "105. Construct Tree from Preorder & Inorder"
+   ],
+   "bonus": [
+    "208. Implement Trie",
+    "124. Binary Tree Maximum Path Sum",
+    "297. Serialize and Deserialize Binary Tree"
+   ],
+   "project": "AI Test Generator (2/2)"
+  },
+  {
+   "day": 13,
+   "topic": "Heap / Priority Queue",
+   "core": [
+    "703. Kth Largest Element in a Stream",
+    "1046. Last Stone Weight"
+   ],
+   "bonus": [
+    "211. Design Add and Search Words",
+    "973. K Closest Points to Origin",
+    "212. Word Search II"
+   ],
+   "project": "Flaky Test Detector (1/1)"
+  },
+  {
+   "day": 14,
+   "topic": "Heap → Backtracking",
+   "core": [
+    "215. Kth Largest Element in an Array",
+    "621. Task Scheduler"
+   ],
+   "bonus": [
+    "355. Design Twitter",
+    "78. Subsets",
+    "295. Find Median from Data Stream"
+   ],
+   "project": "Multi-Agent Research Crew (1/2)"
+  },
+  {
+   "day": 15,
+   "topic": "Backtracking",
+   "core": [
+    "39. Combination Sum",
+    "46. Permutations"
+   ],
+   "bonus": [
+    "90. Subsets II",
+    "40. Combination Sum II",
+    "79. Word Search"
+   ],
+   "project": "Multi-Agent Research Crew (2/2)"
+  },
+  {
+   "day": 16,
+   "topic": "Backtracking → Graphs",
+   "core": [
+    "17. Letter Combinations of a Phone Number",
+    "131. Palindrome Partitioning"
+   ],
+   "bonus": [
+    "200. Number of Islands",
+    "133. Clone Graph",
+    "51. N-Queens"
+   ],
+   "project": "Visual Regression Tool (1/2)"
+  },
+  {
+   "day": 17,
+   "topic": "Graphs",
+   "core": [
+    "695. Max Area of Island",
+    "994. Rotting Oranges"
+   ],
+   "bonus": [
+    "417. Pacific Atlantic Water Flow",
+    "130. Surrounded Regions",
+    "207. Course Schedule"
+   ],
+   "project": "Visual Regression Tool (2/2)"
+  },
+  {
+   "day": 18,
+   "topic": "Graphs",
+   "core": [
+    "210. Course Schedule II",
+    "547. Number of Provinces"
+   ],
+   "bonus": [
+    "684. Redundant Connection",
+    "785. Is Graph Bipartite?",
+    "127. Word Ladder"
+   ],
+   "project": "Mobile UI Test Suite (1/1)"
+  },
+  {
+   "day": 19,
+   "topic": "Advanced Graphs",
+   "core": [
+    "743. Network Delay Time",
+    "1584. Min Cost to Connect All Points"
+   ],
+   "bonus": [
+    "787. Cheapest Flights Within K Stops",
+    "332. Reconstruct Itinerary",
+    "778. Swim in Rising Water"
+   ],
+   "project": "LLM Eval Harness (1/2)"
+  },
+  {
+   "day": 20,
+   "topic": "1-D Dynamic Programming",
+   "core": [
+    "70. Climbing Stairs",
+    "746. Min Cost Climbing Stairs"
+   ],
+   "bonus": [
+    "198. House Robber",
+    "213. House Robber II",
+    "5. Longest Palindromic Substring"
+   ],
+   "project": "LLM Eval Harness (2/2)"
+  },
+  {
+   "day": 21,
+   "topic": "1-D Dynamic Programming",
+   "core": [
+    "647. Palindromic Substrings",
+    "322. Coin Change"
+   ],
+   "bonus": [
+    "91. Decode Ways",
+    "152. Maximum Product Subarray",
+    "139. Word Break"
+   ],
+   "project": "Streak: Challenge Tracker App (1/2)"
+  },
+  {
+   "day": 22,
+   "topic": "1-D → 2-D DP",
+   "core": [
+    "300. Longest Increasing Subsequence",
+    "62. Unique Paths"
+   ],
+   "bonus": [
+    "416. Partition Equal Subset Sum",
+    "1143. Longest Common Subsequence",
+    "309. Buy/Sell Stock with Cooldown"
+   ],
+   "project": "Streak: Challenge Tracker App (2/2)"
+  },
+  {
+   "day": 23,
+   "topic": "2-D Dynamic Programming",
+   "core": [
+    "518. Coin Change II",
+    "494. Target Sum"
+   ],
+   "bonus": [
+    "97. Interleaving String",
+    "72. Edit Distance",
+    "329. Longest Increasing Path in a Matrix"
+   ],
+   "project": "Data Pipeline + Quality Checks (1/1)"
+  },
+  {
+   "day": 24,
+   "topic": "Greedy + hard DP",
+   "core": [
+    "53. Maximum Subarray",
+    "55. Jump Game"
+   ],
+   "bonus": [
+    "115. Distinct Subsequences",
+    "312. Burst Balloons",
+    "10. Regular Expression Matching"
+   ],
+   "project": "Browser Agent Benchmark (1/2)"
+  },
+  {
+   "day": 25,
+   "topic": "Greedy",
+   "core": [
+    "45. Jump Game II",
+    "134. Gas Station"
+   ],
+   "bonus": [
+    "846. Hand of Straights",
+    "1899. Merge Triplets to Form Target",
+    "763. Partition Labels"
+   ],
+   "project": "Browser Agent Benchmark (2/2)"
+  },
+  {
+   "day": 26,
+   "topic": "Intervals",
+   "core": [
+    "57. Insert Interval",
+    "56. Merge Intervals"
+   ],
+   "bonus": [
+    "435. Non-overlapping Intervals",
+    "678. Valid Parenthesis String",
+    "1851. Minimum Interval to Include Each Query"
+   ],
+   "project": "Load Testing Report (1/1)"
+  },
+  {
+   "day": 27,
+   "topic": "Math & Matrix",
+   "core": [
+    "48. Rotate Image",
+    "54. Spiral Matrix"
+   ],
+   "bonus": [
+    "73. Set Matrix Zeroes",
+    "202. Happy Number",
+    "66. Plus One"
+   ],
+   "project": "AI PR Reviewer Action (1/2)"
+  },
+  {
+   "day": 28,
+   "topic": "Math & Bits",
+   "core": [
+    "136. Single Number",
+    "50. Pow(x, n)"
+   ],
+   "bonus": [
+    "191. Number of 1 Bits",
+    "43. Multiply Strings",
+    "2013. Detect Squares"
+   ],
+   "project": "AI PR Reviewer Action (2/2)"
+  },
+  {
+   "day": 29,
+   "topic": "Bit Manipulation",
+   "core": [
+    "338. Counting Bits",
+    "268. Missing Number"
+   ],
+   "bonus": [
+    "190. Reverse Bits",
+    "371. Sum of Two Integers",
+    "7. Reverse Integer"
+   ],
+   "project": "Bug Severity Classifier (1/1)"
+  },
+  {
+   "day": 30,
+   "topic": "Mock interview day",
+   "core": [],
+   "bonus": [],
+   "project": "Portfolio Day (1/1)"
+  }
+ ]
+}

@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.env
+secrets/
+data/*.db
+data/*.xlsx
+data/timetable.json
+data/profile.md

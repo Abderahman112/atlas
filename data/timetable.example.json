@@ -1,0 +1,147 @@
+{
+  "_note": "Example timetable. Copy to data/timetable.json and put your own classes in. Days: mon..sun.",
+  "term_start": "2026-09-08",
+  "term_end": "2026-12-09",
+  "classes": [
+    {
+      "course": "CS 301 Operating Systems",
+      "kind": "Laboratory L04",
+      "day": "mon",
+      "start": "10:30",
+      "end": "12:20",
+      "where": "Science Hall 101"
+    },
+    {
+      "course": "CS 201 Logic",
+      "kind": "Lecture",
+      "day": "mon",
+      "start": "14:30",
+      "end": "15:20",
+      "where": "Engineering 204"
+    },
+    {
+      "course": "CS 301 Operating Systems",
+      "kind": "Tutorial T05",
+      "day": "tue",
+      "start": "11:30",
+      "end": "12:20",
+      "where": "Library 110"
+    },
+    {
+      "course": "CS 401 Security",
+      "kind": "Lecture",
+      "day": "tue",
+      "start": "12:30",
+      "end": "14:20",
+      "where": "Arts Building 12"
+    },
+    {
+      "course": "CS 305 Graphics",
+      "kind": "Lecture",
+      "day": "tue",
+      "start": "15:30",
+      "end": "16:20",
+      "where": "Science Hall 101"
+    },
+    {
+      "course": "ECON 102 Macroeconomics",
+      "kind": "Lecture",
+      "day": "tue",
+      "start": "16:30",
+      "end": "17:20",
+      "where": "Engineering 204"
+    },
+    {
+      "course": "CS 301 Operating Systems",
+      "kind": "Lecture",
+      "day": "wed",
+      "start": "12:30",
+      "end": "13:20",
+      "where": "Library 110"
+    },
+    {
+      "course": "ECON 102 Macroeconomics",
+      "kind": "Tutorial T06",
+      "day": "wed",
+      "start": "13:30",
+      "end": "14:20",
+      "where": "Arts Building 12"
+    },
+    {
+      "course": "CS 201 Logic",
+      "kind": "Lecture",
+      "day": "wed",
+      "start": "14:30",
+      "end": "15:20",
+      "where": "Science Hall 101"
+    },
+    {
+      "course": "CS 305 Graphics",
+      "kind": "Lecture",
+      "day": "wed",
+      "start": "15:30",
+      "end": "16:20",
+      "where": "Engineering 204"
+    },
+    {
+      "course": "CS 201 Logic",
+      "kind": "Tutorial T02",
+      "day": "wed",
+      "start": "16:30",
+      "end": "18:20",
+      "where": "Library 110"
+    },
+    {
+      "course": "CS 401 Security",
+      "kind": "Lecture",
+      "day": "thu",
+      "start": "12:30",
+      "end": "13:20",
+      "where": "Arts Building 12"
+    },
+    {
+      "course": "CS 301 Operating Systems",
+      "kind": "Lecture",
+      "day": "fri",
+      "start": "12:30",
+      "end": "13:20",
+      "where": "Science Hall 101"
+    },
+    {
+      "course": "CS 401 Security",
+      "kind": "Tutorial T03",
+      "day": "fri",
+      "start": "14:30",
+      "end": "15:20",
+      "where": "Engineering 204"
+    },
+    {
+      "course": "CS 305 Graphics",
+      "kind": "Lecture",
+      "day": "fri",
+      "start": "15:30",
+      "end": "16:20",
+      "where": "Library 110"
+    },
+    {
+      "course": "CS 201 Logic",
+      "kind": "Lecture",
+      "day": "fri",
+      "start": "16:30",
+      "end": "17:20",
+      "where": "Arts Building 12"
+    }
+  ],
+  "work": {
+    "name": "Part-time job",
+    "days": [
+      "sun",
+      "mon",
+      "tue",
+      "wed",
+      "thu"
+    ],
+    "start": "08:00",
+    "rule": "ends at 10:00, or 1 hour before the first class that day if that is earlier"
+  }
+}
