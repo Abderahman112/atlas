@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import re
 import time
 from dataclasses import dataclass, asdict
 from datetime import date, datetime, timedelta, time as dtime
@@ -16,6 +17,8 @@ import recurring_ical_events
 from atlas.config import settings
 
 DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
+ASSESSMENT = re.compile(r"\b(midterm|exam|quiz|test)\b", re.I)
+COURSE_CODE = re.compile(r"\b([A-Z]{2,8} \d[A-Z0-9]{3})\b")  # e.g. "CS 301A", "ECON 1BB3"
 
 
 @dataclass
@@ -94,9 +97,15 @@ def parse_ics(raw: bytes, label: str, start: datetime, end: datetime) -> list[Ev
         e = comp.get("DTEND")
         e_dt = _aware(e.dt, tz)[0] if e else None
         title = str(comp.get("SUMMARY", "(untitled)"))
+        location = str(comp.get("LOCATION", ""))
+        course = COURSE_CODE.search(location)
+        if course and course.group(1) not in title:  # LMS feeds keep the course in LOCATION
+            title = f"[{course.group(1)}] {title}"
         # Avenue/D2L due dates are zero-length events titled "... - Due" / "Due: ..."
-        kind = "deadline" if "due" in title.lower() or e_dt is None or e_dt == s else "event"
-        out.append(Event(title, s, e_dt, label, str(comp.get("LOCATION", "")), all_day,
+        # Due dates are zero-length or say "due"; exams get the same 3-day/24h/3h reminders.
+        is_due = "due" in title.lower() or e_dt is None or e_dt == s or ASSESSMENT.search(title)
+        kind = "deadline" if is_due else "event"
+        out.append(Event(title, s, e_dt, label, location, all_day,
                          f'{label}:{comp.get("UID", title)}:{s.isoformat()}', kind))
     return out
 

@@ -12,6 +12,7 @@ VERSION:2.0
 BEGIN:VEVENT
 UID:a1
 SUMMARY:Assignment 1 - Due
+LOCATION:CS 301A:Operating Systems
 DTSTART:20261002T035900Z
 DTEND:20261002T035900Z
 END:VEVENT
@@ -35,6 +36,7 @@ def test_ics_recurrence_and_deadlines():
     titles = [(e.title, e.kind) for e in events]
     assert titles.count(("Club meeting", "event")) == 3
     due = next(e for e in events if e.kind == "deadline")
+    assert due.title == "[CS 301A] Assignment 1 - Due"
     assert due.start == day(2026, 10, 1, 23, 59)  # UTC converted to Toronto time
 
 
