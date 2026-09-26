@@ -7,3 +7,5 @@ data/*.db
 data/*.xlsx
 data/timetable.json
 data/profile.md
+ui/node_modules/
+ui/dist/

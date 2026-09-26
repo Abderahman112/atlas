@@ -7,6 +7,7 @@ from atlas.agents import tools as T
 from atlas.agents.base import Agent, Tool, schema
 from atlas.config import settings
 from atlas.db import DB
+from atlas.events import bus
 
 
 def load_profile() -> str:
@@ -87,16 +88,30 @@ def db_tools(db: DB) -> dict[str, Tool]:
     return T.db_tools(db)
 
 
+# Who lives where in Atlas Town: name -> (title, role, building)
+TOWN = {
+    "atlas": ("Atlas", "Orchestrator: talks to you and delegates", "HQ"),
+    "schedule": ("Chrono", "Schedule: classes, work, events, free time", "Clock Tower"),
+    "inbox": ("Posty", "Inbox: email summaries and replies needed", "Post Office"),
+    "school": ("Sage", "School: assignments, quizzes, exams", "Library"),
+    "coop": ("Scout", "Co-op: applications and next steps", "Career Center"),
+    "planner": ("Juniper", "Planner: day plans adapted to your energy", "Greenhouse"),
+    "triage": ("Dash", "Mail watch: flags important new email", "Post Office"),
+}
+
+
 def build_team(db: DB, client: anthropic.AsyncAnthropic | None = None) -> Agent:
     client = client or anthropic.AsyncAnthropic()
     specialists = {
         name: Agent(name, f"{prompt}\n\n{ABOUT_USER}\n\n{UNTRUSTED}", make_tools(db),
-                    settings.specialist_effort, client)
+                    settings.specialist_effort, client, title=TOWN[name][0], role=TOWN[name][1],
+                    building=TOWN[name][2])
         for name, (prompt, make_tools) in SPECIALISTS.items()
     }
 
     def delegate(agent: Agent) -> Tool:
         async def ask(request: str) -> str:
+            bus.emit("atlas", "delegate", request, to=agent.name)
             # The current time goes in the request, not the system prompt, so the prompt cache holds.
             n = T.now()
             return await agent.ask(f"Now: {n:%A %Y-%m-%d %H:%M} ({settings.tz.key}).\n\n{request}")
@@ -106,4 +121,5 @@ def build_team(db: DB, client: anthropic.AsyncAnthropic | None = None) -> Agent:
 
     tools = [delegate(a) for a in specialists.values()]
     tools += [db_tools(db)[k] for k in ("add_task", "list_tasks", "complete_task", "log_mood")]
-    return Agent("atlas", ORCHESTRATOR, tools, settings.orchestrator_effort, client)
+    return Agent("atlas", ORCHESTRATOR, tools, settings.orchestrator_effort, client,
+                 title=TOWN["atlas"][0], role=TOWN["atlas"][1], building=TOWN["atlas"][2])

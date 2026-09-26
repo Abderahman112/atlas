@@ -42,6 +42,11 @@ class Settings:
     profile: Path = ROOT / "data" / "profile.md"               # personal, git-ignored
     challenge: Path = ROOT / "data" / "challenge.json"
 
+    # Atlas Town web UI. Keep the host on 127.0.0.1 and reach it through Tailscale or an SSH tunnel.
+    ui_host: str = os.getenv("ATLAS_UI_HOST", "127.0.0.1")
+    ui_port: int = int(os.getenv("ATLAS_UI_PORT", "8787"))
+    ui_token: str = os.getenv("ATLAS_UI_TOKEN", "")  # empty: one is generated and printed at startup
+
     quiet_start: int = int(os.getenv("QUIET_START_HOUR", "23"))
     quiet_end: int = int(os.getenv("QUIET_END_HOUR", "7"))
 

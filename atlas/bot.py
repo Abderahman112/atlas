@@ -4,16 +4,12 @@ from __future__ import annotations
 import asyncio
 import logging
 
-import anthropic
 from telegram import Update
 from telegram.constants import ChatAction
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
 
-from atlas.agents import tools as T
-from atlas.agents.team import build_team
 from atlas.config import settings
-from atlas.db import DB
-from atlas.proactive import Proactive
+from atlas.service import Assistant
 
 log = logging.getLogger(__name__)
 
@@ -37,33 +33,23 @@ def chunks(text: str, size: int = 4000):
         text = text[cut:].lstrip("\n")
 
 
-class AtlasBot:
-    def __init__(self):
-        self.db = DB(settings.db_path)
-        self.atlas = build_team(self.db)
-        self.lock = asyncio.Lock()  # one conversation turn at a time
+class TelegramBot:
+    def __init__(self, assistant: Assistant):
+        self.assistant = assistant
         self.app = Application.builder().token(settings.telegram_token).build()
-        self.proactive = Proactive(self.db, self.atlas, self.push)
-
         owner = filters.User(user_id=settings.owner_id) if settings.owner_id else filters.ALL
         self.app.add_handler(CommandHandler("start", self.start))
         for cmd, prompt in SHORTCUTS.items():
             self.app.add_handler(CommandHandler(cmd, self.shortcut(prompt), filters=owner))
         self.app.add_handler(MessageHandler(owner & filters.TEXT & ~filters.COMMAND, self.on_text))
         self.app.add_error_handler(self.on_error)
-        if settings.owner_id:
-            self.proactive.schedule(self.app.job_queue)
+        assistant.outlets.append(self.push)
 
-    # --- outbound ---------------------------------------------------------------------------
     async def push(self, text: str) -> None:
-        """Proactive message to the owner; also stored so follow-up questions have context."""
-        if not settings.owner_id or not text:
-            return
-        self.db.add_message(settings.owner_id, "assistant", text)
-        for part in chunks(text):
-            await self.app.bot.send_message(settings.owner_id, part)
+        if settings.owner_id:
+            for part in chunks(text):
+                await self.app.bot.send_message(settings.owner_id, part)
 
-    # --- handlers ---------------------------------------------------------------------------
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         uid = update.effective_user.id
         if not settings.owner_id:
@@ -85,26 +71,12 @@ class AtlasBot:
         if not settings.owner_id:  # until the owner is configured, nobody gets answers
             await update.message.reply_text("Send /start to finish setup.")
             return
-        chat_id = update.effective_chat.id
-        async with self.lock:
-            typing = asyncio.create_task(self._typing(chat_id))
-            try:
-                messages = self.db.history(chat_id)
-                n = T.now()
-                messages.append({"role": "user", "content": f"[{n:%a %Y-%m-%d %H:%M}] {text}"})
-                reply = await self.atlas.run(messages)
-            except anthropic.RateLimitError:
-                reply = "I'm being rate-limited right now. Give me a minute and ask again."
-            except anthropic.APIStatusError as exc:
-                log.exception("Claude API error")
-                reply = f"Something went wrong on my side (API {exc.status_code}). Try again shortly."
-            except anthropic.APIConnectionError:
-                reply = "I couldn't reach Claude. The server may be offline; try again in a bit."
-            finally:
-                typing.cancel()
-            self.db.add_message(chat_id, "user", text)
-            self.db.add_message(chat_id, "assistant", reply or "(no reply)")
-        for part in chunks(reply or "(no reply)"):
+        typing = asyncio.create_task(self._typing(update.effective_chat.id))
+        try:
+            reply = await self.assistant.chat(text, source="telegram")
+        finally:
+            typing.cancel()
+        for part in chunks(reply):
             await update.message.reply_text(part)
 
     async def _typing(self, chat_id: int) -> None:
@@ -115,5 +87,12 @@ class AtlasBot:
     async def on_error(self, update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
         log.error("Unhandled error", exc_info=context.error)
 
-    def run(self) -> None:
-        self.app.run_polling(allowed_updates=Update.ALL_TYPES)
+    async def start_polling(self) -> None:
+        await self.app.initialize()
+        await self.app.start()
+        await self.app.updater.start_polling(allowed_updates=Update.ALL_TYPES)
+
+    async def stop(self) -> None:
+        await self.app.updater.stop()
+        await self.app.stop()
+        await self.app.shutdown()
