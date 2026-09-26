@@ -31,7 +31,7 @@ async def test_runs_parallel_tools_and_returns_final_text():
     tool = Tool("echo", "echo", schema({"x": {"type": "string"}}, ["x"]), lambda x: seen.append(x) or f"got {x}")
     c = client(NS(stop_reason="tool_use", content=[use("a", "echo", x="1"), use("b", "echo", x="2")]),
                NS(stop_reason="end_turn", content=[text("done")]))
-    agent = Agent("t", "sys", [tool], "low", c)
+    agent = Agent("t", "sys", [tool], "low", c, model="claude-opus-5")
     messages = [{"role": "user", "content": "hi"}]
 
     assert await agent.run(messages) == "done"
@@ -63,6 +63,22 @@ async def test_async_tools_and_unknown_tool():
     a, b = messages[2]["content"]
     assert a["content"] == '{"ok": true}' and not a["is_error"]
     assert b["is_error"]
+
+
+def test_model_options_per_model():
+    from atlas.agents.base import model_options
+    assert model_options("claude-haiku-4-5", "high") == {}
+    assert model_options("claude-sonnet-5", "low") == {"output_config": {"effort": "low"}}
+    opus = model_options("claude-opus-5", "medium")
+    assert opus["fallbacks"] == "default" and opus["output_config"] == {"effort": "medium"}
+
+
+async def test_haiku_request_has_no_effort_or_fallbacks():
+    c = client(NS(stop_reason="end_turn", content=[text("hi")]))
+    await Agent("t", "sys", [], "low", c, model="claude-haiku-4-5").ask("x")
+    call = c.beta.messages.calls[0]
+    assert call["model"] == "claude-haiku-4-5"
+    assert "output_config" not in call and "fallbacks" not in call and "betas" not in call
 
 
 async def test_refusal():

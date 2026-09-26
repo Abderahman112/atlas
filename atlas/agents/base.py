@@ -17,7 +17,23 @@ from atlas.events import AgentState, bus
 log = logging.getLogger(__name__)
 
 FALLBACK_BETA = "server-side-fallback-2026-07-01"
+FALLBACK_MODELS = ("claude-opus-5", "claude-fable-5-1")  # server-side refusal fallback
 MAX_STEPS = 12
+
+
+def supports_effort(model: str) -> bool:
+    return not model.startswith("claude-haiku")
+
+
+def model_options(model: str, effort: str) -> dict:
+    """Request fields that depend on the model: Haiku takes neither effort nor fallbacks."""
+    opts: dict = {}
+    if supports_effort(model):
+        opts["output_config"] = {"effort": effort}
+    if model.startswith(FALLBACK_MODELS):
+        opts["betas"] = [FALLBACK_BETA]
+        opts["fallbacks"] = "default"
+    return opts
 
 
 @dataclass
@@ -52,11 +68,13 @@ def describe_call(name: str, args: dict) -> str:
 class Agent:
     def __init__(self, name: str, system: str, tools: list[Tool], effort: str,
                  client: anthropic.AsyncAnthropic | None = None, max_tokens: int = 16000,
-                 title: str | None = None, role: str = "", building: str = ""):
+                 title: str | None = None, role: str = "", building: str = "", model: str | None = None):
         self.name, self.system, self.max_tokens = name, system, max_tokens
+        self.model = model or settings.model
         self.tools = {t.name: t for t in tools}
         self.client = client or anthropic.AsyncAnthropic()
-        self.state = bus.register(AgentState(name, title or name.title(), role, building, effort=effort))
+        self.state = bus.register(AgentState(name, title or name.title(), role, building, effort=effort,
+                                             model=self.model))
 
     async def _call_tool(self, block) -> dict:
         tool = self.tools.get(block.name)
@@ -87,15 +105,13 @@ class Agent:
             for _ in range(MAX_STEPS):
                 bus.set_status(self.name, "thinking", "Thinking…")
                 response = await self.client.beta.messages.create(
-                    model=settings.model,
+                    model=self.model,
                     max_tokens=self.max_tokens,
                     system=self.system,          # frozen text: keeps the cached prefix stable
                     tools=[t.spec() for t in self.tools.values()],
                     messages=messages,
-                    output_config={"effort": self.state.effort},
                     cache_control={"type": "ephemeral"},
-                    betas=[FALLBACK_BETA],
-                    fallbacks="default",
+                    **model_options(self.model, self.state.effort),
                 )
                 self._count_usage(getattr(response, "usage", None))
                 messages.append({"role": "assistant", "content": response.content})

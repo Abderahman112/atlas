@@ -30,9 +30,10 @@ def test_everything_but_health_needs_the_token(client):
 
 
 def test_pause_blocks_an_agent_and_effort_is_validated(client):
-    r = client.post("/api/agents/inbox", json={"paused": True, "effort": "high"}, headers=AUTH)
-    assert r.json()["paused"] and r.json()["effort"] == "high"
+    r = client.post("/api/agents/inbox", json={"paused": True}, headers=AUTH)
+    assert r.json()["paused"] and r.json()["model"] == "claude-haiku-4-5"
     assert client.post("/api/agents/inbox", json={"effort": "extreme"}, headers=AUTH).status_code == 422
+    assert client.post("/api/agents/inbox", json={"effort": "high"}, headers=AUTH).status_code == 422  # Haiku
     assert client.post("/api/agents/nobody", json={"paused": True}, headers=AUTH).status_code == 404
 
     reply = client.post("/api/chat", json={"text": "summarise my inbox"}, headers=AUTH).json()["reply"]

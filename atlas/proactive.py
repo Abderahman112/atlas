@@ -77,7 +77,8 @@ class Proactive:
             "by when. If nothing needs attention, reply with exactly NOTHING.\n\n"
             f"{ABOUT_USER}\n\n{UNTRUSTED}",
             [T.MAIL_READ], settings.specialist_effort, atlas.client,
-            title=TOWN["triage"][0], role=TOWN["triage"][1], building=TOWN["triage"][2])
+            title=TOWN["triage"][0], role=TOWN["triage"][1], building=TOWN["triage"][2],
+            model=settings.triage_model)
 
     async def _brief(self, instruction: str) -> None:
         n = T.now()
@@ -165,7 +166,8 @@ QUIET_JOBS = {"reminders", "inbox_watch"}
 # name "method:variant" -> runs Proactive.method
 SPECS = [
     Spec("reminders", "Class & deadline reminders", "every 5 min", every=300),
-    Spec("inbox_watch", "Inbox watch", "every 30 min", every=1800),
+    Spec("inbox_watch", "Inbox watch", f"every {settings.inbox_check_minutes} min",
+         every=settings.inbox_check_minutes * 60),
     Spec("morning:work", "Morning brief", "7:15 AM Sun-Thu", at=time(7, 15),
          days=("sun", "mon", "tue", "wed", "thu")),
     Spec("morning:off", "Morning brief (days off)", "9:00 AM Fri-Sat", at=time(9, 0), days=("fri", "sat")),

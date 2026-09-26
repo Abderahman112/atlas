@@ -7,8 +7,12 @@ import time
 from collections import deque
 from dataclasses import asdict, dataclass, field
 
-# Approximate $/1M tokens for claude-opus-5 (input, output, cache read, cache write).
-PRICES = (5.00, 25.00, 0.50, 6.25)
+# Approximate $/1M tokens: (input, output, cache read, cache write).
+PRICES = {
+    "claude-haiku-4-5": (1.00, 5.00, 0.10, 1.25),
+    "claude-sonnet-5": (2.00, 10.00, 0.20, 2.50),
+    "claude-opus-5": (5.00, 25.00, 0.50, 6.25),
+}
 
 
 @dataclass
@@ -21,6 +25,7 @@ class AgentState:
     doing: str = ""
     paused: bool = False
     effort: str = "low"
+    model: str = "claude-haiku-4-5"
     calls: int = 0
     tool_calls: int = 0
     input_tokens: int = 0
@@ -31,13 +36,14 @@ class AgentState:
 
     @property
     def cost(self) -> float:
-        i, o, cr, cw = PRICES
+        i, o, cr, cw = PRICES.get(self.model, PRICES["claude-opus-5"])  # unknown model: assume the dearest
         return (self.input_tokens * i + self.output_tokens * o
                 + self.cache_read_tokens * cr + self.cache_write_tokens * cw) / 1e6
 
     def to_dict(self) -> dict:
         d = asdict(self)
         d["cost"] = round(self.cost, 4)
+        d["supports_effort"] = not self.model.startswith("claude-haiku")
         return d
 
 
@@ -66,7 +72,7 @@ class Bus:
 
     def register(self, state: AgentState) -> AgentState:
         existing = self.agents.get(state.name)
-        if existing:  # keep counters and pause state across rebuilds
+        if existing:  # keep pause state and effort across rebuilds
             state.paused, state.effort = existing.paused, existing.effort
         self.agents[state.name] = state
         return state

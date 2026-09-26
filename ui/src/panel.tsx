@@ -4,6 +4,12 @@ import { COLORS } from "./town/world";
 
 export const EFFORTS = ["low", "medium", "high", "xhigh"];
 
+const MODEL_NAMES: Record<string, string> = {
+  "claude-haiku-4-5": "Haiku 4.5",
+  "claude-sonnet-5": "Sonnet 5",
+  "claude-opus-5": "Opus 5",
+};
+
 const clock = (ts: number) => new Date(ts * 1000).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
 
 export function relative(ts: number | null): string {
@@ -55,6 +61,7 @@ export function AgentCard({ agent, events, agents, onPause, onEffort }: {
         <div>
           <h2>{agent.title}</h2>
           <p className="role">{agent.role} · lives at the {agent.building}</p>
+          <p className="role">Model: <b>{MODEL_NAMES[agent.model] ?? agent.model}</b></p>
         </div>
         <StatusPill status={agent.status} />
       </header>
@@ -69,13 +76,19 @@ export function AgentCard({ agent, events, agents, onPause, onEffort }: {
         <button className={agent.paused ? "primary" : ""} onClick={() => onPause(!agent.paused)}>
           {agent.paused ? "Resume" : "Pause"}
         </button>
-        <div className="segmented" role="group" aria-label="Effort">
-          {EFFORTS.map((e) => (
-            <button key={e} aria-pressed={agent.effort === e} onClick={() => onEffort(e)}>{e}</button>
-          ))}
-        </div>
+        {agent.supports_effort && (
+          <div className="segmented" role="group" aria-label="Effort">
+            {EFFORTS.map((e) => (
+              <button key={e} aria-pressed={agent.effort === e} onClick={() => onEffort(e)}>{e}</button>
+            ))}
+          </div>
+        )}
       </div>
-      <p className="hint">Effort sets how hard this agent thinks. Higher is smarter but slower and pricier.</p>
+      <p className="hint">
+        {agent.supports_effort
+          ? "Effort sets how hard this agent thinks. Higher is smarter but slower and pricier."
+          : "Runs on the cheapest model. Change it in .env (ATLAS_MODEL / ATLAS_SPECIALIST_MODEL) for smarter answers."}
+      </p>
       {mine.length > 0 && (
         <ul className="mini-feed">
           {mine.map((e) => (

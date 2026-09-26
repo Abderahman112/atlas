@@ -140,7 +140,22 @@ your devices only, and you can add it to your home screen.
 - Email and calendar text is untrusted. The prompts tell every agent to report it, never obey it, and the tools are read-only, so a malicious email can't make Atlas act.
 
 ## Cost
-Every agent runs on `claude-opus-5`: the orchestrator at medium effort, specialists at low, with prompt caching and server-side refusal fallback turned on. Expect a few cents per question plus the scheduled briefs. Set `ATLAS_MODEL=claude-sonnet-5` in `.env` to cut costs, and watch actual spend in the Claude Console.
+By default every agent runs on **Claude Haiku 4.5**, the cheapest model ($1 / $5 per million input /
+output tokens, and no billed "thinking"). Estimated monthly API spend:
+
+| Use | Questions a day | API cost / month |
+|---|---|---|
+| Light | 2 | ~$5 |
+| Moderate | 5 | ~$8 |
+| Heavy | 15 | ~$15 |
+
+That covers the morning brief (~$0.06), evening check-in (~$0.03), hourly inbox screening and the
+weekly review. Reminders don't use the API at all. Add ~$5/month for the server.
+
+For smarter answers, upgrade the agent that matters most first: `ATLAS_MODEL=claude-sonnet-5` puts
+Atlas itself on Sonnet 5 (roughly doubles the bill); `claude-opus-5` is the most capable and ~5x the cost.
+Atlas Town shows each agent's live token count and estimated cost, and a monthly spend limit in the
+Claude Console caps the bill.
 
 ## Roadmap
 - [ ] "Hey Atlas" wake word in Atlas Town, like Jarvis

@@ -11,6 +11,8 @@ export interface AgentState {
   doing: string;
   paused: boolean;
   effort: string;
+  model: string;
+  supports_effort: boolean;
   calls: number;
   tool_calls: number;
   input_tokens: number;

@@ -71,6 +71,8 @@ def create_app(assistant: Assistant, token: str) -> FastAPI:
         if patch.effort is not None:
             if patch.effort not in EFFORTS:
                 raise HTTPException(422, f"effort must be one of {sorted(EFFORTS)}")
+            if s.model.startswith("claude-haiku"):
+                raise HTTPException(422, f"{s.title} runs on {s.model}, which doesn't use effort")
             s.effort = patch.effort
         if patch.paused is not None:
             s.paused = patch.paused

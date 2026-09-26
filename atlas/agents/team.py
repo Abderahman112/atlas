@@ -105,7 +105,7 @@ def build_team(db: DB, client: anthropic.AsyncAnthropic | None = None) -> Agent:
     specialists = {
         name: Agent(name, f"{prompt}\n\n{ABOUT_USER}\n\n{UNTRUSTED}", make_tools(db),
                     settings.specialist_effort, client, title=TOWN[name][0], role=TOWN[name][1],
-                    building=TOWN[name][2])
+                    building=TOWN[name][2], model=settings.specialist_model)
         for name, (prompt, make_tools) in SPECIALISTS.items()
     }
 

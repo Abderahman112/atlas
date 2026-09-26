@@ -22,9 +22,16 @@ class Settings:
     # Only this Telegram user may talk to the bot. Leave empty on first run; /start prints your id.
     owner_id: int = int(os.getenv("TELEGRAM_OWNER_ID", "0") or 0)
 
-    model: str = os.getenv("ATLAS_MODEL", "claude-opus-5")
+    # Models per role. Haiku 4.5 is the cheapest. For smarter answers set claude-sonnet-5 or claude-opus-5
+    # (the orchestrator benefits most, since it plans and writes the replies).
+    model: str = os.getenv("ATLAS_MODEL", "claude-haiku-4-5")                       # Atlas itself
+    specialist_model: str = os.getenv("ATLAS_SPECIALIST_MODEL", "claude-haiku-4-5")  # the five specialists
+    triage_model: str = os.getenv("ATLAS_TRIAGE_MODEL", "claude-haiku-4-5")          # new-mail screening
+    # Effort only applies to models that support it (Sonnet 5 / Opus); Haiku ignores it.
     orchestrator_effort: str = os.getenv("ATLAS_ORCHESTRATOR_EFFORT", "medium")
     specialist_effort: str = os.getenv("ATLAS_SPECIALIST_EFFORT", "low")
+    history_messages: int = int(os.getenv("ATLAS_HISTORY", "12"))      # chat messages sent with each question
+    inbox_check_minutes: int = int(os.getenv("ATLAS_INBOX_MINUTES", "60"))
 
     tz: ZoneInfo = ZoneInfo(os.getenv("ATLAS_TIMEZONE", "America/Toronto"))
     db_path: Path = Path(os.getenv("ATLAS_DB", ROOT / "data" / "atlas.db"))

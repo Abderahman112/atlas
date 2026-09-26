@@ -34,7 +34,7 @@ class Assistant:
         bus.emit("atlas", "message_in", text, source=source)
         async with self.lock:
             try:
-                messages = self.db.history(self.chat_id)
+                messages = self.db.history(self.chat_id, settings.history_messages)
                 n = T.now()
                 messages.append({"role": "user", "content": f"[{n:%a %Y-%m-%d %H:%M}] {text}"})
                 reply = await self.atlas.run(messages) or "(no reply)"
