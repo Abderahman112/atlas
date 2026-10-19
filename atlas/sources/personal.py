@@ -2,6 +2,11 @@
 from __future__ import annotations
 
 import json
+import os
+import shutil
+import subprocess
+import sys
+import time
 from collections import Counter
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -9,10 +14,31 @@ from pathlib import Path
 from atlas.config import settings
 
 
+SF_DATALESS = 0x40000000  # macOS: file content offloaded to iCloud
+
+
+def ensure_local(path: Path, timeout: float = 60) -> None:
+    """iCloud can offload Desktop/Documents files on macOS; reading one then blocks until it downloads.
+    Ask iCloud for the file up front and wait, so a read never hangs. No-op elsewhere."""
+    if sys.platform != "darwin" or not shutil.which("brctl"):
+        return
+    offloaded = lambda: bool(getattr(os.stat(path), "st_flags", 0) & SF_DATALESS)  # noqa: E731
+    if not offloaded():
+        return
+    subprocess.run(["brctl", "download", str(path)], capture_output=True, timeout=30)
+    deadline = time.monotonic() + timeout
+    while offloaded():
+        if time.monotonic() > deadline:
+            raise TimeoutError(f"{path.name} is still downloading from iCloud; try again in a minute")
+        time.sleep(1)
+
+
 def coop_rows(path: Path | None = None) -> list[dict]:
     import openpyxl
 
-    ws = openpyxl.load_workbook(path or settings.coop_tracker, read_only=True, data_only=True)["Tracker"]
+    path = Path(path or settings.coop_tracker)
+    ensure_local(path)
+    ws = openpyxl.load_workbook(path, read_only=True, data_only=True)["Tracker"]
     rows = list(ws.iter_rows(values_only=True))
     header = [str(h) for h in rows[0]]
     out = []

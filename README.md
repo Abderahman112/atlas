@@ -121,7 +121,15 @@ Build the UI once (`cd ui && npm install && npm run build`). `python -m atlas` t
 http://127.0.0.1:8787 and prints the access token in its log (or set `ATLAS_UI_TOKEN` in `.env`).
 For UI development, run `npm run dev` in `ui/`; it proxies to the running Atlas.
 
-### 8. Deploy (VPS, ~$5/month)
+### 8. Run in the background on a Mac
+```bash
+deploy/mac-service.sh install && deploy/mac-service.sh start   # starts at login, restarts on crash
+deploy/mac-service.sh status    # or: logs, restart, stop, uninstall
+```
+Keep the project outside iCloud-synced folders (Desktop, Documents). macOS can offload files there,
+and Python freezes when it reads one. Atlas downloads an offloaded co-op tracker before reading it.
+
+### 9. Deploy (VPS, ~$5/month)
 Any small Ubuntu VPS works (Hetzner, DigitalOcean, Lightsail). Clone the repo and create the venv,
 then copy `.env`, `secrets/` and `data/Co-op Tracker.xlsx` over with rsync. Finally:
 ```bash
